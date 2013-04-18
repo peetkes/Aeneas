@@ -53,7 +53,7 @@
                                         <xsl:with-param name="theParameters">
                                             <heading>
                                                 <fo:inline xsl:use-attribute-sets="__body__first__header__heading">
-                                                    <fo:retrieve-marker retrieve-class-name="current-header"/>
+                                                    <fo:retrieve-marker retrieve-class-name="book-header"/>
                                                 </fo:inline>
                                             </heading>
                                         </xsl:with-param>
@@ -78,7 +78,7 @@
                             <fo:table-cell>
                                 <fo:block xsl:use-attribute-sets="__body__odd__header__left">
                                     <xsl:call-template name="insertVariable">
-                                        <xsl:with-param name="theVariableID" select="'Body odd header left'"/>
+                                        <xsl:with-param name="theVariableID" select="'Body header left'"/>
                                         <xsl:with-param name="theParameters">
                                             <prodname>
                                                 <xsl:value-of select="$productName"/>
@@ -90,11 +90,11 @@
                             <fo:table-cell>
                                 <fo:block xsl:use-attribute-sets="__body__odd__header__right">
                                     <xsl:call-template name="insertVariable">
-                                        <xsl:with-param name="theVariableID" select="'Body odd header right'"/>
+                                        <xsl:with-param name="theVariableID" select="'Body header right'"/>
                                         <xsl:with-param name="theParameters">
                                             <heading>
                                                 <fo:inline xsl:use-attribute-sets="__body__odd__header__heading">
-                                                    <fo:retrieve-marker retrieve-class-name="current-header"/>
+                                                    <fo:retrieve-marker retrieve-class-name="book-header"/>
                                                 </fo:inline>
                                             </heading>
                                         </xsl:with-param>
@@ -120,7 +120,7 @@
                             <fo:table-cell>
                                 <fo:block xsl:use-attribute-sets="__body__even__header__left">
                                     <xsl:call-template name="insertVariable">
-                                        <xsl:with-param name="theVariableID" select="'Body even header left'"/>
+                                        <xsl:with-param name="theVariableID" select="'Body header left'"/>
                                         <xsl:with-param name="theParameters">
                                             <prodname>
                                                 <xsl:value-of select="$productName"/>
@@ -132,11 +132,11 @@
                             <fo:table-cell>
                                 <fo:block xsl:use-attribute-sets="__body__even__header__right">
                                     <xsl:call-template name="insertVariable">
-                                        <xsl:with-param name="theVariableID" select="'Body even header right'"/>
+                                        <xsl:with-param name="theVariableID" select="'Body header right'"/>
                                         <xsl:with-param name="theParameters">
                                             <heading>
                                                 <fo:inline xsl:use-attribute-sets="__body__even__header__heading">
-                                                    <fo:retrieve-marker retrieve-class-name="current-header"/>
+                                                    <fo:retrieve-marker retrieve-class-name="book-header"/>
                                                 </fo:inline>
                                             </heading>
                                         </xsl:with-param>

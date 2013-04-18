@@ -3,7 +3,7 @@
     prefer="system">
     
     <!-- artwork -->
-    <rewriteURI uriStartString="artwork:common/artwork/" rewritePrefix="common/artwork/" />
+    <rewriteURI uriStartString="artwork:common/artwork/" rewritePrefix="Customization/OpenTopic/common/artwork/" />
     
     <!-- Custom attributes entry -->
     <uri name="cfg:fo/attrs/custom.xsl" uri="fo/attrs/custom.xsl"/>

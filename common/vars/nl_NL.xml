@@ -54,6 +54,14 @@ See the accompanying license.txt file for applicable licenses.
           <param ref-name="prodname"/>&#xA0;-&#xA0;<param ref-name="heading"/>
      </variable>
 
+     <variable id="Body header left">
+          <param ref-name="prodname"/>
+     </variable>
+     
+     <variable id="Body header right">
+          <param ref-name="heading"/>
+     </variable>
+     
      <variable id="Body first header left">
           <param ref-name="prodname"/>
      </variable>

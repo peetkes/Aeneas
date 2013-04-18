@@ -2,6 +2,7 @@
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
     xmlns:xs="http://www.w3.org/2001/XMLSchema"
     xmlns:fo="http://www.w3.org/1999/XSL/Format"
+    xmlns:opentopic="http://www.idiominc.com/opentopic"
     xmlns:exsl="http://exslt.org/common"
     exclude-result-prefixes="xs exsl"
     version="2.0">
@@ -18,7 +19,7 @@
             <xsl:call-template name="createCustomLayoutMasters"/>
             <xsl:call-template name="createBookmarks"/>
             <!-- geen frontmatter en toc in PDF -->
-            <!--<xsl:call-template name="createFrontMatter"/>-->
+            <xsl:call-template name="createFrontMatter"/>
             <!--<xsl:call-template name="createToc"/>-->
             <!--<xsl:call-template name="createPreface"/>-->
             <xsl:apply-templates/>
@@ -27,46 +28,59 @@
     </xsl:template>
     
      <!-- front matter using regular page layouts -->
-       <xsl:template name="createFrontMatter">
-        <fo:page-sequence master-reference="body-sequence" format="i" xsl:use-attribute-sets="__force__page__count">
-            <xsl:call-template name="insertFrontMatterStaticContents"/>
-            <fo:flow flow-name="xsl-region-body">
-                <fo:block xsl:use-attribute-sets="__frontmatter">
-                    <!-- set the title -->
-                    <fo:block xsl:use-attribute-sets="__frontmatter__title">
-                        <xsl:choose>
-                            <xsl:when test="//*[contains(@class,' bkinfo/bkinfo ')][1]">
-                                <xsl:apply-templates select="//*[contains(@class,' bkinfo/bkinfo ')][1]/*[contains(@class,' topic/title ')]/node()"/>
-                            </xsl:when>
-                            <xsl:when test="//*[contains(@class, ' map/map ')]/@title">
-                                <xsl:value-of select="//*[contains(@class, ' map/map ')]/@title"/>
-                            </xsl:when>
-                            <xsl:otherwise>
-                                <xsl:value-of select="/descendant::*[contains(@class, ' topic/topic ')][1]/*[contains(@class, ' topic/title ')]"/>
-                            </xsl:otherwise>
-                        </xsl:choose>
-                    </fo:block>
-
-                    <!-- set the subtitle -->
-                    <xsl:apply-templates select="//*[contains(@class,' bkinfo/bkinfo ')][1]/*[contains(@class,' bkinfo/bktitlealts ')]/*[contains(@class,' bkinfo/bksubtitle ')]"/>
-
-                    <fo:block xsl:use-attribute-sets="__frontmatter__owner">
-                        <xsl:choose>
-                            <xsl:when test="//*[contains(@class,' bkinfo/bkowner ')]">
-                                <xsl:apply-templates select="//*[contains(@class,' bkinfo/bkowner ')]"/>
-                            </xsl:when>
-                            <xsl:otherwise>
-                                <xsl:apply-templates select="$map/*[contains(@class, ' map/topicmeta ')]"/>
-                            </xsl:otherwise>
-                        </xsl:choose>
-                    </fo:block>
-                </fo:block>
-                <xsl:call-template name="processCopyrigth"/>
-            </fo:flow>
-        </fo:page-sequence>
-       </xsl:template>
+    <xsl:template name="createFrontMatter">
+        <xsl:choose>
+            <xsl:when test="$ditaVersion &gt;= 1.1">
+                <xsl:call-template name="createFrontMatter_1.0"/>
+            </xsl:when>
+            <xsl:otherwise>
+                <fo:page-sequence master-reference="front-matter" xsl:use-attribute-sets="__force__page__count">
+                    <xsl:call-template name="insertFrontMatterStaticContents"/>
+                    <fo:flow flow-name="xsl-region-body">
+                        <fo:block xsl:use-attribute-sets="__frontmatter">
+                            <!-- set the title -->
+                            <fo:block xsl:use-attribute-sets="__frontmatter__title">
+                                    <xsl:choose>
+                                        <xsl:when test="$map/*[contains(@class,' topic/title ')][1]">
+                                            <xsl:apply-templates select="$map/*[contains(@class,' topic/title ')][1]"/>
+                                        </xsl:when>
+                                        <xsl:when test="//*[contains(@class,' bkinfo/bkinfo ')][1]">
+                                            <xsl:apply-templates select="//*[contains(@class,' bkinfo/bkinfo ')][1]/*[contains(@class,' topic/title ')]/node()"/>
+                                        </xsl:when>
+                                        <xsl:when test="//*[contains(@class, ' map/map ')]/@title">
+                                            <xsl:value-of select="//*[contains(@class, ' map/map ')]/@title"/>
+                                        </xsl:when>
+                                        <xsl:otherwise>
+                                            <xsl:value-of select="/descendant::*[contains(@class, ' topic/topic ')][1]/*[contains(@class, ' topic/title ')]"/>
+                                        </xsl:otherwise>
+                                    </xsl:choose>
+                            </fo:block>
+                            
+                            <!-- set the subtitle -->
+                            <xsl:apply-templates select="//*[contains(@class,' bkinfo/bkinfo ')][1]/*[contains(@class,' bkinfo/bktitlealts ')]/*[contains(@class,' bkinfo/bksubtitle ')]"/>
+                            
+                            <fo:block xsl:use-attribute-sets="__frontmatter__owner">
+                                <xsl:choose>
+                                    <xsl:when test="//*[contains(@class,' bkinfo/bkowner ')]">
+                                        <xsl:apply-templates select="//*[contains(@class,' bkinfo/bkowner ')]"/>
+                                    </xsl:when>
+                                    <xsl:otherwise>
+                                        <xsl:apply-templates select="$map/*[contains(@class, ' map/topicmeta ')]"/>
+                                    </xsl:otherwise>
+                                </xsl:choose>
+                            </fo:block>
+                            
+                        </fo:block>
+                        
+                        <!--<xsl:call-template name="createPreface"/>-->
+                        
+                    </fo:flow>
+                </fo:page-sequence>
+            </xsl:otherwise>
+        </xsl:choose>
+    </xsl:template>
     
-     <!-- toc also using regular page layouts -->
+       <!-- toc also using regular page layouts -->
     <xsl:template name="createToc">
         <xsl:variable name="toc">
             <xsl:apply-templates select="/" mode="toc"/>
@@ -93,6 +107,15 @@
             </xsl:call-template>
         </xsl:variable>
         <xsl:variable name="attrSet2" select="concat($attrSet1, '__content')"/>
+        <xsl:if test="$level = 1">
+            <fo:block xsl:use-attribute-sets="map.title">
+                <xsl:call-template name="commonattributes"/>
+                <fo:marker marker-class-name="book-header">
+                    <xsl:apply-templates select="//opentopic:map/*[contains(@class,' topic/title ')][1]"/>
+                </fo:marker>
+                <xsl:apply-templates select="//opentopic:map/*[contains(@class,' topic/title ')][1]"/>
+            </fo:block>            
+        </xsl:if>
         <fo:block>
             <xsl:call-template name="commonattributes"/>
             <xsl:call-template name="processAttrSetReflection">

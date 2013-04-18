@@ -1,7 +1,11 @@
 <?xml version='1.0'?>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:fo="http://www.w3.org/1999/XSL/Format" version="2.0">
 
+    <xsl:include href="custom-layout-masters-attr.xsl"/>
+    
     <!-- basic settings -->
+    <xsl:variable name="page-margin-inside" select="$page-margins"/>
+    <xsl:variable name="page-margin-outside" select="$page-margins"/>
     <xsl:variable name="mirror-page-margins" select="true()"/>
  
     <!-- colors -->
@@ -135,14 +139,28 @@
         <xsl:attribute name="line-height">140%</xsl:attribute>
     </xsl:attribute-set>
     
-    <!-- topic title, Hoofdstuktitel -->
-    <xsl:attribute-set name="topic.title">
+    <!-- map title, map/title -->
+    <xsl:attribute-set name="map.title">
         <xsl:attribute name="font-family">Sans</xsl:attribute>
         <xsl:attribute name="margin-top">0pc</xsl:attribute>
         <xsl:attribute name="margin-bottom">0pc</xsl:attribute>
         <xsl:attribute name="font-size">20pt</xsl:attribute>
         <xsl:attribute name="font-weight">bold</xsl:attribute>
-        <xsl:attribute name="padding-top">1.4pc</xsl:attribute>
+        <xsl:attribute name="padding-top">0pc</xsl:attribute>
+        <xsl:attribute name="keep-with-next.within-column">always</xsl:attribute>
+        <xsl:attribute name="border-bottom">none</xsl:attribute>
+        <xsl:attribute name="margin-left"><xsl:value-of select="$side-col-width"/></xsl:attribute>
+        <xsl:attribute name="keep-with-next">always</xsl:attribute>
+    </xsl:attribute-set>
+    
+    <!-- topic title, Hoofdstuktitel -->
+    <xsl:attribute-set name="topic.title">
+        <xsl:attribute name="font-family">Sans</xsl:attribute>
+        <xsl:attribute name="margin-top">0pc</xsl:attribute>
+        <xsl:attribute name="margin-bottom">0pc</xsl:attribute>
+        <xsl:attribute name="font-size">14pt</xsl:attribute>
+        <xsl:attribute name="font-weight">bold</xsl:attribute>
+        <xsl:attribute name="padding-top">0.4pc</xsl:attribute>
         <xsl:attribute name="keep-with-next.within-column">always</xsl:attribute>
         <xsl:attribute name="border-bottom">none</xsl:attribute>
         <xsl:attribute name="margin-left"><xsl:value-of select="$side-col-width"/></xsl:attribute>
